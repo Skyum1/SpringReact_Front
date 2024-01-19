@@ -1,30 +1,42 @@
-import './App.css';
-import React,{useState} from 'react';
+import React, {useState, useEffect} from "react";
+import axios from "axios";
 
-function App() {
+const App = () => {
 
-  const [num,setNum] = useState(1);
-  const [numList,setNumList] = useState([]);
+    const [posts,setPosts] = useState([]);
 
-  function numRecording() {
-    setNumList([...numList, num]);
+    useEffect(async () => {
+        /*
+        axios({
+            method:'GET',
+            url:'https://jsonplaceholder.typicode.com/photos'
+        }).then(response => setPosts(response.data))
+            */
+        // axios.get('https://jsonplaceholder.typicode.com/photos')
+        //      .then(response => setPosts(response.data))
 
-    setNum(0);
-  }
-  return (
-    <div className="App">
-      <div>현재 숫자 : {num}</div>
-      <button onClick={() => {setNum(num + 1)}}>숫자 증가</button>
-      <button onClick={() => {setNum(num - 1)}}>숫자 감소</button>
-      <button onClick={numRecording}>숫자 기록</button>
-      <h1>저장된 숫자</h1>
-      <ul>
-        {numList.map((num)=> (
-          <li> {num} </li>
-        ))}
-      </ul>
-    </div>
-  );
+        try {
+            const response = await axios.get('https://jsonplaceholder.typicode.com/photos');
+            setPosts(response.data);
+        } catch(error) {
+            console.log(error);
+        }
+    })
+
+    
+    return (
+        <ul>
+            {posts.map(post => (
+                <li key={post.id}>
+                    <div>{post.title}
+                    </div>
+                    <div>
+                        <img src={post.thumbnailUrl}/>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
 }
 
 export default App;
